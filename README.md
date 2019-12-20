@@ -13,3 +13,5 @@ run:
 ```
 <user>@<host>:/path/to/GitStorage$ ./update_git_repos.sh master
 ```
+## /CloudBees/Flow/setup.sh
+Prepare the Ubuntu machine to run and install the CloudBees Flow
