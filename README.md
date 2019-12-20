@@ -1,5 +1,5 @@
 # bashScripts
-## update_git_repos.sh
+## git/update_git_repos.sh
 Copy the file to the dir/folder where your list of the repos are storing.
 chnage the current location to the target dir/folder
 for example:
