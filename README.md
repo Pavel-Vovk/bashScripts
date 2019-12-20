@@ -11,6 +11,7 @@ for example:
 --repo2
 
 --...
+
 run:
 ```
 <user>@<host>:/path/to/GitStorage$ ./update_git_repos.sh master
