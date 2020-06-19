@@ -31,6 +31,7 @@ while getopts "s:d:f:o:h:n" opt; do
   esac
 done
 last=""
+version="not found"
 host="https://${host}/"
 rm "$fileOut" || true
 startDate="${startDate}T00:00:00.000Z"
@@ -44,8 +45,10 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	echo "${last}"
 	xpath -q -e "/response/object/job[finish='${last}']" "${pluginName}.xml"
 	jobId=`xpath -q -e "/response/object/job[finish='${last}']/jobId/text()" "${pluginName}.xml"`
+	version=`ectool getProperty --jobId ${jobId} --propertyName version`
 	jobLink="${host}/commander/link/jobDetails/jobs/${jobId}"
 	echo "${jobLink}"
-	echo "${pluginName} JobLink: $jobLink" >> "$fileOut"
+	echo "${pluginName}, Version: ${version},  JobLink:  $jobLink" >> "$fileOut"
+	echo "|${pluginName} | ${version} | ${jobLink} |" >> "formatted-${fileOut}"
 done < "${fileIn}"
 
