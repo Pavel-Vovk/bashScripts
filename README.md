@@ -17,5 +17,4 @@ run:
 Prepare the Ubuntu machine to run and install the CloudBees Flow
 
 ## /CloudBees/Plugins/getJobs.sh
-Gathering the information about Plugins Build job runs from CloudBees CD server
-Based on the plugins list - collect the versions and jobs run
+Gathering the information about Plugins Build job runs from CloudBees CD server based on the plugins list - collect the versions and jobs run
