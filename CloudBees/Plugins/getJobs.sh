@@ -44,7 +44,7 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	((count++))
 	pluginName=${pluginName//[$'\t\r\n']}
     echo "Plugin Name: $pluginName"
-	ectool findObjects job --filters "[{ propertyName => 'projectName', operator => 'equals', operand1 => 'Github Plugins' },{ propertyName => 'procedureName', operator => 'equals', operand1 => 'Build GCP' },{ propertyName => 'outcome', operator => 'equals', operand1 => 'success' },{ propertyName => 'createTime', operator => 'greaterOrEqual', operand1 => '${startDate}' },{ propertyName => 'jobName', operator => 'contains', operand1 => '${pluginName}' },{ propertyName => 'jobName', operator => 'notLike', operand1 => '%preflight%' }]" > "${pluginName}.xml"
+	ectool findObjects job --filters "[{ propertyName => 'projectName', operator => 'equals', operand1 => 'Github Plugins' },{ propertyName => 'procedureName', operator => 'equals', operand1 => 'Build GCP' },{ propertyName => 'outcome', operator => 'equals', operand1 => 'success' },{ propertyName => 'createTime', operator => 'greaterOrEqual', operand1 => '${startDate}' },{ propertyName => 'jobName', operator => 'contains', operand1 => '${pluginName}-' },{ propertyName => 'jobName', operator => 'notLike', operand1 => '%preflight%' }]" > "${pluginName}.xml"
 	last=`xpath -q -e '/response/object/job/finish/text()' "${pluginName}.xml" | sort -nr | head -n"${number}"`
 	echo "${last}"
 	xpath -q -e "/response/object/job[finish='${last}']" "${pluginName}.xml"
@@ -59,4 +59,3 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	echo "${pluginName}, Version: ${version},  JobLink:  $jobLink" >> "$fileOut"
 	echo "|${count}|${pluginName} | ${version} | ${jobLink} |" >> "formatted-${fileOut}"
 done < "${fileIn}"
-
