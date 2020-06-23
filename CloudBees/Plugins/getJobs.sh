@@ -48,6 +48,7 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	last=""
 	jobId=""
 	version="Not Found"
+	makVersion="Not Found"
 	#counting
 	((count++))
 
@@ -71,16 +72,14 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	if [ $jobId != "" ]
 	then
 		version=`ectool getProperty --jobId ${jobId} --propertyName version`
+		#plugins.mak view version creation
+	    makVersion=`echo $version | grep -o -P "[0-9]\.[0-9]\."`
+	    makVersion="${makVersion}*"
 	fi
 
 	#link to job creation
 	jobLink="${host}/commander/link/jobDetails/jobs/${jobId}"
 	echo "${jobLink}"
-
-	#plugins.mak view version creation
-	makVersion=`echo $version | grep -o -P "[0-9]\.[0-9]\."`
-	makVersion="${makVersion}*"
-
 	#finnig the files
 	echo "${pluginName}, Version: ${version},  JobLink:  $jobLink" >> "$fileOut"
 	echo "|${count}|${pluginName} | ${version} | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
