@@ -15,6 +15,12 @@ run:
 ```
 ## /CloudBees/Flow/setup.sh
 Prepare the Ubuntu machine to run and install the CloudBees Flow
+###Example of run
+```aidl
+./getJobs.sh -d 2020-07-01 -f plugins.txt -o BD-CD_10.0.1
+```
+Date format: YYYY-MM-DD (-d flag)
+
 
 ## /CloudBees/Plugins/getJobs.sh
 Gathering the information about Plugins Build job runs from CloudBees CD server based on the plugins list - collect the versions and jobs run
