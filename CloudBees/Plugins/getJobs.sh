@@ -36,7 +36,8 @@ while getopts "s:d:f:o:h:n:r" opt; do
 done
 
 #intialize vars
-count=0
+count1=0
+count2=0
 host="https://${host}/"
 rm "$fileOut" || true
 rm "formatted-${fileOut}" || true
@@ -54,7 +55,7 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	failedTests=0
 	passedTests=0
 	#counting
-	((count++))
+	((count1++))
 
 	#remove redundant chars in the end of line
 	pluginName=${pluginName//[$'\t\r\n']}
@@ -75,6 +76,7 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	#if jobId contains some id - get the version for Plugin
 	if [[ $jobId != "" ]]
 	then
+		((count2++))
 		version=`ectool getProperty --jobId ${jobId} --propertyName version`
 		#plugins.mak view version creation
 	    makVersion=`echo $version | grep -o -P "[0-9]\.[0-9]\."`
@@ -85,6 +87,7 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 		failedTests=`ectool getProperty --jobId ${jobId} --propertyName failedSystemtests`
 		passedTests=`expr $totalTests - $failedTests`
 		passedTests=`expr $totalTests - $skippedTests`
+		echo "|${count2}|${pluginName} | ${version} | Total: ${totalTests} Tests Passed | ${jobLink} |" >> "formatted-forJIRA-WithoutNotFound-${fileOut}"
 	fi
 
 	#link to job creation
@@ -92,8 +95,8 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	echo "${jobLink}"
 	#fining the files
 	echo "${pluginName}, Version: ${version},  JobLink:  $jobLink" >> "$fileOut"
-	echo "|${count}|${pluginName} | ${version} | Total: ${totalTests} Tests Passed | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
-	#echo "|${count}|${pluginName} | ${version} | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
+	echo "|${count1}|${pluginName} | ${version} | Total: ${totalTests} Tests Passed | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
+	#echo "|${count1}|${pluginName} | ${version} | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
 	echo "${pluginName}:${makVersion}" >> "formatted-forPlugins.mak-${fileOut}"
 
 	#deletion of temporary xml files with responces from CloudBees Server
