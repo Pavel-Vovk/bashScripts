@@ -49,6 +49,10 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	jobId=""
 	version="Not Found"
 	makVersion="Not Found"
+	skippedTests=0
+	totalTests=0
+	failedTests=0
+	passedTests=0
 	#counting
 	((count++))
 
@@ -69,20 +73,27 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	echo "${jobId}"
 
 	#if jobId contains some id - get the version for Plugin
-	if [ $jobId != "" ]
+	if [[ $jobId != "" ]]
 	then
 		version=`ectool getProperty --jobId ${jobId} --propertyName version`
 		#plugins.mak view version creation
 	    makVersion=`echo $version | grep -o -P "[0-9]\.[0-9]\."`
 	    makVersion="${makVersion}*"
+	    #collect tests information for Analyses
+	    skippedTests=`ectool getProperty --jobId ${jobId} --propertyName skippedSystemtests`
+		totalTests=`ectool getProperty --jobId ${jobId} --propertyName totalSystemtests`
+		failedTests=`ectool getProperty --jobId ${jobId} --propertyName failedSystemtests`
+		passedTests=`expr $totalTests - $failedTests`
+		passedTests=`expr $totalTests - $skippedTests`
 	fi
 
 	#link to job creation
 	jobLink="${host}/commander/link/jobDetails/jobs/${jobId}"
 	echo "${jobLink}"
-	#finnig the files
+	#fining the files
 	echo "${pluginName}, Version: ${version},  JobLink:  $jobLink" >> "$fileOut"
-	echo "|${count}|${pluginName} | ${version} | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
+	echo "|${count}|${pluginName} | ${version} | Total: ${totalTests} Tests Passed | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
+	#echo "|${count}|${pluginName} | ${version} | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
 	echo "${pluginName}:${makVersion}" >> "formatted-forPlugins.mak-${fileOut}"
 
 	#deletion of temporary xml files with responces from CloudBees Server
