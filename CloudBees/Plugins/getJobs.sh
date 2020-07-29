@@ -95,7 +95,12 @@ while IFS= read -r pluginName || [[ -n "$pluginName" ]]; do
 	echo "${jobLink}"
 	#fining the files
 	echo "${pluginName}, Version: ${version},  JobLink:  $jobLink" >> "$fileOut"
-	echo "|${count1}|${pluginName} | ${version} | Total: ${totalTests} Tests Passed | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
+	if [[ $totalTests != 0 ]]
+	then
+		echo "|${count1}|${pluginName} | ${version} | Total: ${totalTests} Tests Passed | ${jobLink} | (/) |" >> "formatted-forJIRA-${fileOut}"
+	else
+		echo "|${count1}|${pluginName} | ${version} | Total: ${totalTests} Tests Passed | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
+	fi
 	#echo "|${count1}|${pluginName} | ${version} | ${jobLink} |" >> "formatted-forJIRA-${fileOut}"
 	echo "${pluginName}:${makVersion}" >> "formatted-forPlugins.mak-${fileOut}"
 
